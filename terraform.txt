@@ -1,0 +1,32 @@
+provider "aws" {
+  region = "us-east-1"
+}
+
+resource "aws_instance" "ec2_machine" {
+  ami           = "ami-0953476d60561c955"
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "Terra EC2"
+  }
+}
+resource "aws_s3_bucket" "demo_bucket" {
+  bucket = "sandhya-upload-demo-2025-${random_id.bucket_id.hex}"
+
+  tags = {
+    Name = "upload-demo"
+  }
+}
+
+resource "aws_s3_object" "text_file" {
+  bucket  = aws_s3_bucket.demo_bucket.id
+  key     = "sample.txt"
+  source  = "./sample.txt"
+  acl     = "private"
+}
+
+#aws configure
+#terraform init
+#terraform plan
+#terraform apply
+#terraform destroy
